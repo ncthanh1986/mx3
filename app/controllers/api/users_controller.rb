@@ -8,18 +8,23 @@ class Api::UsersController < ApplicationController
         render json: user
     end
     def create
-        if request.get?
-            user = User.new(user_params)
-            if user.save
-                render status: 200, json: {
-                    message: "Successfully created new user",
-                    user: user
-                    }.to_json
-            else
-                render status: 422, json: {
-                    errors: user.errors
-                    }.to_json
+        if request.post?
+            if params && params[:name] && params[:email] && params[:password]
+                params[:user] = Hash.new
+                        user = User.new(user_params)
+                        if user.save
+                            render status: 200, json: {
+                                message: "Successfully created new user",
+                                user: user
+                                }.to_json
+                        else
+                            render status: 422, json: {
+                                errors: user.errors
+                                }.to_json
+                        end
+
             end
+
         end
     end
     def destroy
